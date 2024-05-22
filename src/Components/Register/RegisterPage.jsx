@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./RegisterPage.module.css";
@@ -15,12 +17,12 @@ function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/users/", {
+      const response = await fetch("http://localhost:5000/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password, role: "simple" }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (!response.ok) {
@@ -45,13 +47,13 @@ function RegisterPage() {
           placeholder="Enter your username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-        ></input>
+        />
         <input
           type="password"
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-        ></input>
+        />
       </div>
       <div className={styles.buttonContainer}>
         <button
