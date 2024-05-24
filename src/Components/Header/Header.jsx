@@ -1,14 +1,19 @@
 /** @format */
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./Header.css";
-
 import logo_dark from "../../assets/logo-white.png";
 import search_icon_dark from "../../assets/search-b.png";
-import { useNavigate } from "react-router-dom";
 
-const Header = ({ theme, setTheme, user }) => {
+const Header = ({ user, setUser }) => {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/login");
+  };
 
   return (
     <div className="navbar">
@@ -16,13 +21,14 @@ const Header = ({ theme, setTheme, user }) => {
       <ul>
         <li onClick={() => navigate("/")}>Home</li>
         <li onClick={() => navigate("/about")}>About</li>
-        <li onClick={() => navigate("/myads")}>Mano Skelbimai</li>
-        <li onClick={() => navigate("/addad")}>Pridėti skelbimą</li>
-        {user && user.role === "admin" && (
+        <li onClick={() => navigate("/")}>Mano Skelbimai</li>
+        <li onClick={() => navigate("/myads")}>Pridėti skelbimą</li>
+        {user?.role === "admin" && (
           <>
-            <li onClick={() => navigate("/add-category")}>Add Category</li>
-            <li onClick={() => navigate("/block-ad")}>Block Ad</li>
-            <li onClick={() => navigate("/block-user")}>Block User</li>
+            <li onClick={() => navigate("/block-user")}>
+              Uzblokuoti vartotoja
+            </li>
+            <li onClick={() => navigate("/block-ad")}>Uzblokuoti skelbima</li>
           </>
         )}
       </ul>
@@ -30,20 +36,20 @@ const Header = ({ theme, setTheme, user }) => {
         <input type="text" placeholder="search" />
         <img src={search_icon_dark} alt="search icon" />
       </div>
-      <button
-        className="RegisterBtn"
-        type="button"
-        onClick={() => navigate("/register")}
-      >
-        Register
-      </button>
-      <button
-        className="LoginBtn"
-        type="button"
-        onClick={() => navigate("/login")}
-      >
-        Login
-      </button>
+      {user ? (
+        <button className="LogoutBtn" onClick={handleLogout}>
+          Logout
+        </button>
+      ) : (
+        <>
+          <button className="RegisterBtn" onClick={() => navigate("/register")}>
+            Register
+          </button>
+          <button className="LoginBtn" onClick={() => navigate("/login")}>
+            Login
+          </button>
+        </>
+      )}
     </div>
   );
 };

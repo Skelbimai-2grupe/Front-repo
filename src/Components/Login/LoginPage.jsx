@@ -4,21 +4,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./LoginPage.module.css";
 
-function LoginPage() {
+const LoginPage = ({ setUser }) => {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const handleBackToRegister = () => {
-    navigate("/register");
-  };
-
-  const handleBackToHome = () => {
-    navigate("/");
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,7 +18,6 @@ function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify({ email, password }),
       });
 
@@ -38,21 +27,16 @@ function LoginPage() {
 
       const data = await response.json();
       const { user, token } = data;
+
       if (!user) {
         throw new Error("User data is missing in response");
       }
 
-      // Store token for future requests
       localStorage.setItem("token", token);
-
-      // Store user for future use (optional)
       localStorage.setItem("user", JSON.stringify(user));
-      // navigation based on role
-      if (user.role === "admin") {
-        navigate("/dashboard");
-      } else {
-        navigate("/");
-      }
+      setUser(user);
+
+      navigate(user.role === "admin" ? "/dashboard" : "/");
     } catch (error) {
       console.error("Login error", error);
       setError("Failed to login. Please check your credentials.");
@@ -78,11 +62,10 @@ function LoginPage() {
         />
         <button type="submit">Login</button>
       </form>
-      <button onClick={handleBackToRegister}>Register an account</button>
-
-      <button onClick={handleBackToHome}>Home</button>
+      <button onClick={() => navigate("/register")}>Register an account</button>
+      <button onClick={() => navigate("/")}>Home</button>
     </div>
   );
-}
+};
 
 export default LoginPage;
