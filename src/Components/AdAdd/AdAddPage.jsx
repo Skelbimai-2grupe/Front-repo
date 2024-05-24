@@ -1,49 +1,51 @@
+/** @format */
+
 import React, { useState } from "react";
 import styles from "./AdAddPage.module.css";
 
 const AdAdder = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!title || !description || !price || !category || !image) {
-      setError('All fields are required.');
+      setError("All fields are required.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('price', price);
-    formData.append('category', category);
-    formData.append('image', image);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("category", category);
+    formData.append("image", image);
 
     try {
-      const response = await fetch('http://localhost:5000/api/ads/', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/ads/", {
+        method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create ad');
+        throw new Error("Failed to create ad");
       }
 
-      alert('Ad created successfully!');
+      alert("Ad created successfully!");
 
-      setTitle('');
-      setDescription('');
-      setPrice('');
-      setCategory('');
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setCategory("");
       setImage(null);
-      setError('');
+      setError("");
     } catch (error) {
-      setError('An error occurred while creating the ad.');
+      setError("An error occurred while creating the ad.");
     }
   };
 
@@ -54,7 +56,7 @@ const AdAdder = () => {
   return (
     <div>
       <h2>Create your ad</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Title:</label>
@@ -98,5 +100,3 @@ const AdAdder = () => {
 };
 
 export default AdAdder;
-
-
