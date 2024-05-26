@@ -11,6 +11,7 @@ import Footer from "./Components/Footer/Footer";
 import AdList from "./Components/AdList/AdList";
 import CreateAd from "./Components/AdAdd/CreateAdd";
 import CreateCategory from "./Components/CategoryAdd/CreateCategory";
+import MyAds from "./Components/MyAds/MyAds";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -36,6 +37,7 @@ const App = () => {
               <Header user={user} />
               <AdList />
               <Footer />
+              <MyAds />
             </>
           }
         />
