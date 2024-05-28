@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown } from "@tabler/icons-react";
+import { Autocomplete } from "@mantine/core";
 import classes from "./Header.module.css";
 import styles from "./Header.module.css";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +30,25 @@ const Header = ({ user }) => {
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const theme = useMantineTheme();
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  // for search
+  const handleSearch = async (query) => {
+    try {
+      const response = await fetch(`/ads/search?title=${query}`);
+      const data = await response.json();
+      setSearchResults(data.ads);
+    } catch (error) {
+      console.error('Error searching ads:', error);
+    }
+  };
+
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);
+    handleSearch(event.target.value);
+  };
 
   // fetch cats
   useEffect(() => {
@@ -108,6 +128,17 @@ const Header = ({ user }) => {
                 </SimpleGrid>
               </HoverCard.Dropdown>
             </HoverCard>
+          </Group>
+
+{/* inputas */}
+
+          <Group>
+            <Autocomplete
+              type="text"
+              placeholder="Search ads by title..."
+              value={searchQuery}
+              onChange={handleInputChange}
+            />
           </Group>
 
           {user && (
