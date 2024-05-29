@@ -12,6 +12,7 @@ import AdList from "./Components/AdList/AdList";
 import MyAds from "./Components/UserAds/UserAdsList";
 import CreateAd from "./Components/AdAdd/CreateAdd";
 import CreateCategory from "./Components/CategoryAdd/CreateCategory";
+import UserFavoritesList from "./Components/Favorites/UserFavoritesList";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/createAd" element={<CreateAd />} />
         <Route path="/createCategory" element={<CreateCategory />} />
         <Route path="/myAds" element={<MyAds />} />
+        <Route path="/myFavorites" element={<UserFavoritesList />} />
         <Route
           path="*"
           element={

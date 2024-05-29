@@ -2,27 +2,26 @@ import React, { useEffect, useState } from "react";
 import AdCard from "../Card/AdCard";
 import { Container, Title, Divider, TextInput } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import classes from "./UserAdsList.module.css";
-import styles from "./UserAdsList.module.css";
+import classes from "./UserFavoritesList.module.css";
+import styles from "./UserFavoritesList.module.css";
 
-const UserAdsList = () => {
-  const [ads, setAds] = useState([]);
+const UserFavoritesList = () => {
+  const [favorites, setFavorites] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserAds = async () => {
+    const fetchUserFavorites = async () => {
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user"));
-      // checkinam ar gauna token, userid
       const userId = user ? user._id : null;
       console.log("Token:", token);
       console.log("User id:", userId);
 
       try {
         const response = await fetch(
-          `http://localhost:5000/api/ads/user/${userId}`,
+          `http://localhost:5000/api/favorites/user/${userId}`,
           {
             method: "GET",
             headers: {
@@ -33,24 +32,26 @@ const UserAdsList = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          setAds(data.ads);
+          setFavorites(data.favorites);
         } else {
-          console.error("Failed to fetch user ads", response.statusText);
+          console.error("Failed to fetch user favorites", response.statusText);
         }
       } catch (error) {
-        console.error("Error fetching user ads:", error);
+        console.error("Error fetching user favorites:", error);
         setError(error.message);
       }
     };
-    fetchUserAds();
+    fetchUserFavorites();
   }, []);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
 
-  const filteredAds = ads.filter((ad) =>
-    ad.description.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredFavorites = favorites.filter((favorite) =>
+    favorite.ad_id.description
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -59,7 +60,7 @@ const UserAdsList = () => {
         Home
       </a>
       <Title align="center" mb="lg">
-        My Ads
+        My favorites
       </Title>
       <TextInput
         placeholder="Search"
@@ -68,15 +69,14 @@ const UserAdsList = () => {
         className={styles.search}
       />
       <div className={styles.adsList}>
-        {filteredAds.length > 0 ? (
-          filteredAds.map((ad) => (
-            <div key={ad._id}>
-              {console.log(ad)}
-              <AdCard ad={ad} />
+        {filteredFavorites.length > 0 ? (
+          filteredFavorites.map((favorite) => (
+            <div key={favorite._id}>
+              <AdCard ad={favorite.ad_id} />
             </div>
           ))
         ) : (
-          <p>No ads found</p>
+          <p>No favorites found</p>
         )}
       </div>
       <Divider className={styles.divider} mt="md" />
@@ -84,4 +84,4 @@ const UserAdsList = () => {
   );
 };
 
-export default UserAdsList;
+export default UserFavoritesList;
